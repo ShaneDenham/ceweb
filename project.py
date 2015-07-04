@@ -15,13 +15,36 @@ import shutil
     Finally, it will delete the tmp dir.
 '''
 
-print "New branch name:"
-branch = raw_input()
+home_dir = os.environ['HOME']
+
+
+def get_variable_vvv():
+    pass
+
+
+def get_vvv():
+    print "Checking for VVV"
+    vvv_path = "{0}/vagrant-local/".format(home_dir)
+    if not os.path.exists(vvv_path):
+        print "Can't find a vagrant-local dir"
+        print "Installing vagrant-hostsupdater plugin..."
+        os.system("vagrant plugin install vagrant-hostsupdater")
+        print "Cloning VVV..."
+        os.system("git clone git://github.com/Varying-Vagrant-Vagrants/VVV.git vagrant-local")
+        os.chdir(vvv_path)
+        os.system("vagrant up")
+    else:
+        print "Found it!"
+        os.chdir(vvv_path)
+
+
+# print "New branch name:"
+# branch = raw_input()
 
 home_dir = os.environ['HOME']
 tmp_dir = "{0}/tmp/".format(home_dir)
 
-print "Creating new project: %r" % branch
+# print "Creating new project: %r" % branch
 
 
 def make_tmp_dir():
@@ -64,6 +87,7 @@ def clone_repos(branch):
         print "creating the %r branch" % branch
         os.system("git push origin master:refs/heads/{0}".format(branch))
 
-make_tmp_dir()
-clone_repos(branch)
-rm_tmp_dir()
+# make_tmp_dir()
+# clone_repos(branch)
+# rm_tmp_dir()
+get_vvv()
