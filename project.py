@@ -16,17 +16,33 @@ import shutil
 '''
 
 home_dir = os.environ['HOME']
+project_dir = "{0}/ceweb/".format(home_dir)
+os.chdir(project_dir)
+
+
+def check_for_variable_vvv():
+    if os.path.isfile("{0}/.vv-config".format(home_dir)):
+        return 'true'
+    else:
+        return 'false'
 
 
 def get_variable_vvv():
-    pass
+    print "Checking for Variable VVV"
+    if not check_for_variable_vvv():
+        print "Can't find a it."
+        print "Installing Variable VVV"
+        os.system("brew install bradp/vv/vv")
+    else:
+        print "Found it!"
+        return
 
 
 def get_vvv():
     print "Checking for VVV"
-    vvv_path = "{0}/vagrant-local/".format(home_dir)
-    if not os.path.exists(vvv_path):
-        print "Can't find a vagrant-local dir"
+    vvv_path = "{0}/vagrant-local/".format(project_dir)
+    if not os.path.isfile("{0}/Vagrantfile".format(vvv_path)):
+        print "Can't find a it."
         print "Installing vagrant-hostsupdater plugin..."
         os.system("vagrant plugin install vagrant-hostsupdater")
         print "Cloning VVV..."
@@ -36,6 +52,10 @@ def get_vvv():
     else:
         print "Found it!"
         os.chdir(vvv_path)
+
+
+def check_for_local_website():
+    pass
 
 
 # print "New branch name:"
@@ -91,3 +111,4 @@ def clone_repos(branch):
 # clone_repos(branch)
 # rm_tmp_dir()
 get_vvv()
+get_variable_vvv()
