@@ -1,46 +1,14 @@
 #!/usr/bin/python
 import os
-import shutil
-
-'''
-    This is a script to initiate a new project for the Covenant Eyes main website.
-    Download the script and run "python ceweb.py"
-
-    It will ask you for a "New branch name:" and create a tmp dir.
-
-    Then for each repo it will:
-        1. Clone the repo in the tmp dir
-        2. Create a the new branch push to origin
-
-    Finally, it will delete the tmp dir.
-'''
 
 home_dir = os.environ['HOME']
-project_dir = "{0}/ceweb/".format(home_dir)
-os.chdir(project_dir)
-
-
-def check_for_variable_vvv():
-    if os.path.isfile("{0}/.vv-config".format(home_dir)):
-        return 'true'
-    else:
-        return 'false'
-
-
-def get_variable_vvv():
-    print "Checking for Variable VVV"
-    if not check_for_variable_vvv():
-        print "Can't find a it."
-        print "Installing Variable VVV"
-        os.system("brew install bradp/vv/vv")
-    else:
-        print "Found it!"
-        return
+project_dir = "{0}/ceweb".format(home_dir)
+vvv_path = "{0}/vagrant-local".format(home_dir)
+os.chdir(home_dir)
 
 
 def get_vvv():
-    print "Checking for VVV"
-    vvv_path = "{0}/vagrant-local/".format(project_dir)
+    print "Checking for VVV..."
     if not os.path.isfile("{0}/Vagrantfile".format(vvv_path)):
         print "Can't find a it."
         print "Installing vagrant-hostsupdater plugin..."
@@ -51,64 +19,139 @@ def get_vvv():
         os.system("vagrant up")
     else:
         print "Found it!"
-        os.chdir(vvv_path)
+
+
+def get_variable_vvv():
+    print "Checking for Variable VVV..."
+    if not os.path.isfile("{0}/.vv-config".format(home_dir)):
+        print "Can't find a it."
+        print "Installing Variable VVV"
+        os.system("brew install bradp/vv/vv")
+    else:
+        print "Found it!"
 
 
 def check_for_local_website():
-    pass
-
-
-# print "New branch name:"
-# branch = raw_input()
-
-home_dir = os.environ['HOME']
-tmp_dir = "{0}/tmp/".format(home_dir)
-
-# print "Creating new project: %r" % branch
-
-
-def make_tmp_dir():
-    print "Setting up tmp dir..."
-    if not os.path.exists(tmp_dir):
-        os.makedirs(tmp_dir)
+    if os.path.isdir("{0}/www/covenanteyes/htdocs/lemonade".format(vvv_path)):
+        return True
     else:
-        print "tmp is already there"
+        return False
 
 
-def rm_tmp_dir():
-    print "Removing tmp dir..."
-    if os.path.exists(tmp_dir):
-        shutil.rmtree(tmp_dir)
-    print "Done."
+def clone_lemonade():
+    print "Checking for lemonade2 repo..."
+    if not os.path.isdir("{0}/www/covenanteyes/htdocs/lemonade/".format(vvv_path)):
+        print "Can't find a it."
+        print "Cloning lemonade2 repo..."
+        os.system("git clone https://github.com/CovenantEyes/lemonade2.git {0}/www/covenanteyes/htdocs".format(vvv_path))
+    else:
+        print "Found it!"
 
 
-def clone_repos(branch):
-    print "Cloning repos..."
+def clone_royrogers():
+    print "Checking for RoyRogers repo..."
+    royrogers_dir = "{0}/www/covenanteyes/htdocs/lemonade/wp-content/themes/roy-rogers".format(vvv_path)
+    if not os.path.isdir("{0}".format(royrogers_dir)):
+        print "Can't find a it."
+        print "Cloning RoyRogers repo..."
+        os.system("git clone https://github.com/CovenantEyes/RoyRogers.git {0}".format(royrogers_dir))
+        print "Renaming scripts.php.example to scripts.php"
+        os.rename("{0}/inc/scripts.php.example".format(royrogers_dir), "{0}/inc/scripts.php".format(royrogers_dir))
+    else:
+        print "Found it!"
 
-    repos = {'lemonade2': 'https://github.com/CovenantEyes/lemonade2.git',
-             'ice-tea': 'https://github.com/CovenantEyes/ice-tea.git',
-             'ce-custom-post-types-plugin': 'https://github.com/CovenantEyes/ce-custom-post-types-plugin.git'}
 
-    for repo, url in repos.items():
-        repopath = "{0}/{1}".format(tmp_dir, repo)
-        os.chdir(tmp_dir)
+def clone_icetea():
+    print "Checking for ice-tea repo..."
+    if not os.path.isdir("{0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/ice-tea".format(vvv_path)):
+        print "Can't find a it."
+        print "Cloning ice-tea repo..."
+        os.system("git clone https://github.com/CovenantEyes/ice-tea.git {0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/ice-tea".format(vvv_path))
+    else:
+        print "Found it!"
+
+
+def clone_posttype():
+    print "Checking for ce-custom-post-types-plugin repo..."
+    if not os.path.isdir("{0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/ce-custom-post-types-plugin".format(vvv_path)):
+        print "Can't find a it."
+        print "Cloning ce-custom-post-types-plugin repo..."
+        os.system("git clone https://github.com/CovenantEyes/ce-custom-post-types-plugin.git {0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/ce-custom-post-types-plugin".format(vvv_path))
+    else:
+        print "Found it!"
+
+
+def clone_supportpress():
+    print "Checking for SupportPress repo..."
+    if not os.path.isdir("{0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/SupportPress".format(vvv_path)):
+        print "Can't find a it."
+        print "Cloning SupportPress repo..."
+        os.system("git clone https://github.com/CovenantEyes/SupportPress.git {0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/SupportPress".format(vvv_path))
+    else:
+        print "Found it!"
+
+
+def clone_repos():
+    print "Cloning repos.."
+    clone_lemonade()
+    clone_royrogers()
+    clone_icetea()
+    clone_posttype()
+    clone_supportpress()
+
+
+def setup_local_website():
+    if not os.path.isdir("{0}/www/covenanteyes".format(vvv_path)):
+        print "Creating local website at covenanteyes.dev..."
+        db_file = "{0}/db_staging_ramp.sql".format(project_dir)
+        if os.path.isfile(db_file):
+            os.rename("{0}".format(db_file), "{0}/wp_2014_covenanteyes.sql".format(vvv_path), )
+            os.system("vv create -d covenanteyes.dev -n covenanteyes --blank-with-db -db {0}/db_staging_ramp.sql".format(vvv_path))
+        else:
+            os.system("vv create -d covenanteyes.dev -n covenanteyes --blank")
+    clone_repos()
+    os.chdir(vvv_path)
+    os.system("vagrant reload --provision")
+
+
+def create_repo_branches(branch):
+    print "Creating repo branches..."
+
+    repo_paths = {'lemonade2': '{0}/www/covenanteyes/htdocs'.format(vvv_path),
+                  'roy-rogers': '{0}/www/covenanteyes/htdocs/lemonade/wp-content/themes/roy-rogers'.format(vvv_path),
+                  'ice-tea': '{0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/ice-tea'.format(vvv_path),
+                  'ce-custom-post-types-plugin': '{0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/ce-custom-post-types-plugin'.format(vvv_path),
+                  'SupportPress': '{0}/www/covenanteyes/htdocs/lemonade/wp-content/plugins/SupportPress'.format(vvv_path)}
+
+    for repo, repo_path in repo_paths.items():
 
         print "cheking for %r" % repo
-        if not os.path.exists(repopath):
-            print "clone this one: %r from: %r" % (repo, url)
-            os.system("git clone {0}".format(url))
-        else:
-            print "already got it"
+        if os.path.isdir(repo_path):
+            os.chdir(repo_path)
+            print "pulling down master"
+            os.system("git checkout master")
+            os.system("git pull -f")
+            print "creating the %r branch" % branch
+            os.system("git push origin master:refs/heads/{0}".format(branch))
 
-        os.chdir(repopath)
-        print "pulling down master"
-        os.system("git checkout master")
-        os.system("git pull -f")
-        print "creating the %r branch" % branch
-        os.system("git push origin master:refs/heads/{0}".format(branch))
 
-# make_tmp_dir()
-# clone_repos(branch)
-# rm_tmp_dir()
-get_vvv()
-get_variable_vvv()
+def build_local_website():
+    get_vvv()
+    get_variable_vvv()
+    setup_local_website()
+
+
+def ce_website_project():
+    print "Checking for a local copy of the website..."
+    if not check_for_local_website():
+        print "Can't find a it."
+        build_local_website()
+    else:
+        print "Found it!"
+        print "New branch name:"
+        branch = raw_input()
+        print "Creating new project: %r" % branch
+        create_repo_branches(branch)
+
+
+ce_website_project()
