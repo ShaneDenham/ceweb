@@ -1,4 +1,4 @@
-j#!/usr/bin/python
+#!/usr/bin/python
 import os
 
 home_dir = os.environ['HOME']
